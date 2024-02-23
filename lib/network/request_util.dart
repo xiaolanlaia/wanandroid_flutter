@@ -7,9 +7,9 @@ import 'package:cookie_jar/cookie_jar.dart';
 import "package:path_provider/path_provider.dart";
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 
+import '../bean/base/api_response_entity.dart';
 import '../utils/constants.dart';
 import '../utils/log_utils.dart';
-import 'base/api_response_entity.dart';
 
 
 // 是否用compute异步
