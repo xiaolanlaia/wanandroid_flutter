@@ -6,6 +6,8 @@
 import 'package:flutter/material.dart' show debugPrint;
 import 'package:wanandroid_flutter/bean/article_data_entity.dart';
 import 'package:wanandroid_flutter/bean/banner_entity.dart';
+import 'package:wanandroid_flutter/bean/project_category_entity.dart';
+import 'package:wanandroid_flutter/bean/project_list_data_entity.dart';
 import 'package:wanandroid_flutter/bean/user_info_entity.dart';
 
 JsonConvert jsonConvert = JsonConvert();
@@ -22,6 +24,12 @@ class JsonConvert {
         (ArticleDataEntity).toString(): ArticleDataEntity.fromJson,
         (ArticleItemEntity).toString(): ArticleItemEntity.fromJson,
         (BannerEntity).toString(): BannerEntity.fromJson,
+        (ProjectCategoryEntity).toString(): ProjectCategoryEntity.fromJson,
+        (ProjectListDataEntity).toString(): ProjectListDataEntity.fromJson,
+        (ProjectListDataItemEntity).toString(): ProjectListDataItemEntity
+            .fromJson,
+        (ProjectListDataDatasTags).toString(): ProjectListDataDatasTags
+            .fromJson,
         (UserInfoEntity).toString(): UserInfoEntity.fromJson,
       };
 
@@ -128,6 +136,22 @@ class JsonConvert {
     if (<BannerEntity>[] is M) {
       return data.map<BannerEntity>((Map<String, dynamic> e) =>
           BannerEntity.fromJson(e)).toList() as M;
+    }
+    if (<ProjectCategoryEntity>[] is M) {
+      return data.map<ProjectCategoryEntity>((Map<String, dynamic> e) =>
+          ProjectCategoryEntity.fromJson(e)).toList() as M;
+    }
+    if (<ProjectListDataEntity>[] is M) {
+      return data.map<ProjectListDataEntity>((Map<String, dynamic> e) =>
+          ProjectListDataEntity.fromJson(e)).toList() as M;
+    }
+    if (<ProjectListDataItemEntity>[] is M) {
+      return data.map<ProjectListDataItemEntity>((Map<String, dynamic> e) =>
+          ProjectListDataItemEntity.fromJson(e)).toList() as M;
+    }
+    if (<ProjectListDataDatasTags>[] is M) {
+      return data.map<ProjectListDataDatasTags>((Map<String, dynamic> e) =>
+          ProjectListDataDatasTags.fromJson(e)).toList() as M;
     }
     if (<UserInfoEntity>[] is M) {
       return data.map<UserInfoEntity>((Map<String, dynamic> e) =>
