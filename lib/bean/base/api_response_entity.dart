@@ -1,5 +1,6 @@
 import 'dart:convert';
 import '../../generated/json/base/json_convert_content.dart';
+import '../../utils/constants.dart';
 
 class ApiResponseEntity<T> {
 	int? errorCode;
@@ -8,36 +9,29 @@ class ApiResponseEntity<T> {
 
 	ApiResponseEntity();
 
-	factory ApiResponseEntity.fromJson(Map<String, dynamic> json) => $ApiResponseEntityFromJson<T>(json);
+	ApiResponseEntity.fromJson(Map<String, dynamic> map) {
+		errorCode = (map['errorCode'] as int?) ?? -1;
+		errorMsg = map['errorMsg'] as String?;
+		if (map.containsKey('data')) {
+			data = _generateOBJ(map['data']);
+		}
+	}
 
-	Map<String, dynamic> toJson() => $ApiResponseEntityToJson(this);
+	T? _generateOBJ<O>(Object? json) {
+		if (json == null) {
+			return null;
+		}
+		if (T.toString() == 'String') {
+			return json.toString() as T;
+		} else if (T.toString() == 'Map<dynamic, dynamic>') {
+			return json as T;
+		} else {
+			/// List类型数据由fromJsonAsT判断处理
+			return JsonConvert.fromJsonAsT<T>(json);
+		}
+	}
 
-	@override
-	String toString() {
-		return jsonEncode(this);
-	}
-}
-ApiResponseEntity<T> $ApiResponseEntityFromJson<T>(Map<String, dynamic> json) {
-	final ApiResponseEntity<T> apiResponseEntity = ApiResponseEntity<T>();
-	final int? errorCode = jsonConvert.convert<int>(json['errorCode']);
-	if (errorCode != null) {
-		apiResponseEntity.errorCode = errorCode;
-	}
-	final String? errorMsg = jsonConvert.convert<String>(json['errorMsg']);
-	if (errorMsg != null) {
-		apiResponseEntity.errorMsg = errorMsg;
-	}
-	final T? data = jsonConvert.convert<T>(json['data']);
-	if (data != null) {
-		apiResponseEntity.data = data;
-	}
-	return apiResponseEntity;
+	bool get isSuccessful  => errorCode == Constant.successCode;
+
 }
 
-Map<String, dynamic> $ApiResponseEntityToJson(ApiResponseEntity entity) {
-	final Map<String, dynamic> data = <String, dynamic>{};
-	data['errorCode'] = entity.errorCode;
-	data['errorMsg'] = entity.errorMsg;
-	data['data'] = entity.data;
-	return data;
-}

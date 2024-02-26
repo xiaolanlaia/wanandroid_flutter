@@ -56,6 +56,15 @@ dependencies:
 
   #  toast
   fluttertoast: ^8.2.2
+  # 刷新
+  easy_refresh: ^3.3.2+1
+  # banner
+  carousel_slider: ^4.2.1
+  #  webview
+  webview_flutter: ^4.4.1
+  # html解析
+  flutter_widget_from_html: ^0.10.6
+  flutter_html: ^3.0.0-beta.2
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +87,10 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  assets:
+    - assets/images/icon_collect.png
+    - assets/images/icon_uncollect.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
