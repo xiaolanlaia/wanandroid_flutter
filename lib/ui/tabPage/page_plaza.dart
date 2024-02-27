@@ -1,4 +1,18 @@
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+import 'package:wanandroid_flutter/bean/base/api_response_entity.dart';
+import 'package:wanandroid_flutter/utils/log_utils.dart';
+
+import '../../bean/article_data_entity.dart';
+import '../../network/api.dart';
+import '../../network/request_util.dart';
+import '../../provider/user.dart';
+import '../article_item_layout.dart';
+import '../base/base_page.dart';
+import '../detail_page.dart';
 
 class PlazaPage extends StatefulWidget {
   const PlazaPage({super.key});
@@ -6,10 +20,124 @@ class PlazaPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _PlazaState();
 }
-class _PlazaState extends State<PlazaPage>{
-  @override
-  Widget build(BuildContext context) {
-    return Text("PlazaPage");
+
+class _PlazaState extends State<PlazaPage>
+    with BasePage<PlazaPage>, AutomaticKeepAliveClientMixin {
+  int _currentPageIndex = 0;
+
+  List<ArticleItemEntity> data = [];
+
+  late RxList<ArticleItemEntity> dataObs = data.obs;
+
+  final EasyRefreshController _refreshController = EasyRefreshController(
+      controlFinishRefresh: true, controlFinishLoad: true);
+
+  Future<bool> _requestData() async {
+    ApiResponseEntity<ArticleDataEntity> res = await HttpGo.instance
+        .get("${Api.plazaArticleList}$_currentPageIndex/json");
+
+    bool isRefresh = _currentPageIndex == 0;
+    if (isRefresh) {
+      data.clear();
+    }
+    if (res.isSuccessful) {
+      data.addAll(res.data!.datas);
+      return true;
+    }
+    return false;
   }
 
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+
+    // 监听user的状态，当登录状态改变时，重新build
+    return Consumer<User>(builder: (context, user, child) {
+      return FutureBuilder(
+          future: _requestData(),
+          builder: (context, snapshot) {
+            LogUtils.d("plaza connect state: ${snapshot.connectionState}");
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.data == false) {
+                return RetryWidget(onTapRetry: () {
+                  setState(() {});
+                });
+              }
+              return _buildContent();
+            } else {
+              return const Center(
+                widthFactor: 1,
+                heightFactor: 1,
+                child: CircularProgressIndicator(),
+              );
+            }
+          });
+    });
+  }
+
+  Widget _buildContent() {
+    if (data.isEmpty) {
+      return const EmptyWidget();
+    }
+    return EasyRefresh.builder(
+      controller: _refreshController,
+      onRefresh: _onRefresh,
+      onLoad: _onLoad,
+      childBuilder: (context, physics) {
+        return Obx(() {
+          // ignore: invalid_use_of_protected_member
+          dataObs.value;
+          return ListView.builder(
+              physics: physics,
+              itemBuilder: (context, index) {
+                ArticleItemEntity itemEntity = data[index];
+                return GestureDetector(
+                  onTap: () {
+                    Get.to(() => DetailPage(itemEntity.link, itemEntity.title));
+                  },
+                  child: ArticleItemLayout(
+                      itemEntity: itemEntity,
+                      onCollectTap: () {
+                        _onCollectClick(itemEntity);
+                      }),
+                );
+              },
+              itemCount: data.length);
+        });
+      },
+    );
+  }
+
+  _onRefresh() async {
+    _currentPageIndex = 0;
+    await _requestData();
+    _refreshController.finishRefresh();
+    dataObs.refresh();
+  }
+
+  _onLoad() async {
+    _currentPageIndex++;
+    await _requestData();
+    _refreshController.finishLoad();
+    dataObs.refresh();
+  }
+
+  _onCollectClick(ArticleItemEntity itemEntity) async {
+    bool collected = itemEntity.collect;
+    ApiResponseEntity<dynamic> res = await (collected
+        ? HttpGo.instance.post("${Api.uncollectArticel}${itemEntity.id}/json")
+        : HttpGo.instance.post("${Api.collectArticle}${itemEntity.id}/json"));
+
+    if (res.isSuccessful) {
+      Fluttertoast.showToast(msg: collected ? "取消收藏！" : "收藏成功！");
+      itemEntity.collect = !itemEntity.collect;
+    } else {
+      Fluttertoast.showToast(
+          msg: (collected ? "取消失败 -- " : "收藏失败 -- ") +
+              (res.errorMsg ?? res.errorCode.toString()));
+    }
+  }
+
+  @override
+  bool get wantKeepAlive => true;
 }
