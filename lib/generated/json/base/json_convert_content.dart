@@ -6,6 +6,7 @@
 import 'package:flutter/material.dart' show debugPrint;
 import 'package:wanandroid_flutter/bean/article_data_entity.dart';
 import 'package:wanandroid_flutter/bean/banner_entity.dart';
+import 'package:wanandroid_flutter/bean/hot_keyword_entity.dart';
 import 'package:wanandroid_flutter/bean/my_shared_data_entity.dart';
 import 'package:wanandroid_flutter/bean/my_todo_data_entity.dart';
 import 'package:wanandroid_flutter/bean/project_category_entity.dart';
@@ -27,6 +28,7 @@ class JsonConvert {
         (ArticleDataEntity).toString(): ArticleDataEntity.fromJson,
         (ArticleItemEntity).toString(): ArticleItemEntity.fromJson,
         (BannerEntity).toString(): BannerEntity.fromJson,
+        (HotKeywordEntity).toString(): HotKeywordEntity.fromJson,
         (MySharedDataEntity).toString(): MySharedDataEntity.fromJson,
         (MySharedDataCoinInfo).toString(): MySharedDataCoinInfo.fromJson,
         (MySharedDataShareArticles).toString(): MySharedDataShareArticles
@@ -146,6 +148,10 @@ class JsonConvert {
     if (<BannerEntity>[] is M) {
       return data.map<BannerEntity>((Map<String, dynamic> e) =>
           BannerEntity.fromJson(e)).toList() as M;
+    }
+    if (<HotKeywordEntity>[] is M) {
+      return data.map<HotKeywordEntity>((Map<String, dynamic> e) =>
+          HotKeywordEntity.fromJson(e)).toList() as M;
     }
     if (<MySharedDataEntity>[] is M) {
       return data.map<MySharedDataEntity>((Map<String, dynamic> e) =>

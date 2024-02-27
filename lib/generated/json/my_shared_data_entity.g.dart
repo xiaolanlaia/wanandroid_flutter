@@ -1,6 +1,5 @@
 import 'package:wanandroid_flutter/generated/json/base/json_convert_content.dart';
 import 'package:wanandroid_flutter/bean/my_shared_data_entity.dart';
-
 import '../../bean/article_data_entity.dart';
 
 
