@@ -6,9 +6,12 @@
 import 'package:flutter/material.dart' show debugPrint;
 import 'package:wanandroid_flutter/bean/article_data_entity.dart';
 import 'package:wanandroid_flutter/bean/banner_entity.dart';
+import 'package:wanandroid_flutter/bean/my_shared_data_entity.dart';
+import 'package:wanandroid_flutter/bean/my_todo_data_entity.dart';
 import 'package:wanandroid_flutter/bean/project_category_entity.dart';
 import 'package:wanandroid_flutter/bean/project_list_data_entity.dart';
 import 'package:wanandroid_flutter/bean/user_info_entity.dart';
+import 'package:wanandroid_flutter/bean/user_tool_entity.dart';
 
 JsonConvert jsonConvert = JsonConvert();
 
@@ -24,6 +27,12 @@ class JsonConvert {
         (ArticleDataEntity).toString(): ArticleDataEntity.fromJson,
         (ArticleItemEntity).toString(): ArticleItemEntity.fromJson,
         (BannerEntity).toString(): BannerEntity.fromJson,
+        (MySharedDataEntity).toString(): MySharedDataEntity.fromJson,
+        (MySharedDataCoinInfo).toString(): MySharedDataCoinInfo.fromJson,
+        (MySharedDataShareArticles).toString(): MySharedDataShareArticles
+            .fromJson,
+        (MyTodoDataEntity).toString(): MyTodoDataEntity.fromJson,
+        (MyTodoDataItem).toString(): MyTodoDataItem.fromJson,
         (ProjectCategoryEntity).toString(): ProjectCategoryEntity.fromJson,
         (ProjectListDataEntity).toString(): ProjectListDataEntity.fromJson,
         (ProjectListDataItemEntity).toString(): ProjectListDataItemEntity
@@ -31,6 +40,7 @@ class JsonConvert {
         (ProjectListDataDatasTags).toString(): ProjectListDataDatasTags
             .fromJson,
         (UserInfoEntity).toString(): UserInfoEntity.fromJson,
+        (UserToolEntity).toString(): UserToolEntity.fromJson,
       };
 
   T? convert<T>(dynamic value, {EnumConvertFunction? enumConvert}) {
@@ -137,6 +147,26 @@ class JsonConvert {
       return data.map<BannerEntity>((Map<String, dynamic> e) =>
           BannerEntity.fromJson(e)).toList() as M;
     }
+    if (<MySharedDataEntity>[] is M) {
+      return data.map<MySharedDataEntity>((Map<String, dynamic> e) =>
+          MySharedDataEntity.fromJson(e)).toList() as M;
+    }
+    if (<MySharedDataCoinInfo>[] is M) {
+      return data.map<MySharedDataCoinInfo>((Map<String, dynamic> e) =>
+          MySharedDataCoinInfo.fromJson(e)).toList() as M;
+    }
+    if (<MySharedDataShareArticles>[] is M) {
+      return data.map<MySharedDataShareArticles>((Map<String, dynamic> e) =>
+          MySharedDataShareArticles.fromJson(e)).toList() as M;
+    }
+    if (<MyTodoDataEntity>[] is M) {
+      return data.map<MyTodoDataEntity>((Map<String, dynamic> e) =>
+          MyTodoDataEntity.fromJson(e)).toList() as M;
+    }
+    if (<MyTodoDataItem>[] is M) {
+      return data.map<MyTodoDataItem>((Map<String, dynamic> e) =>
+          MyTodoDataItem.fromJson(e)).toList() as M;
+    }
     if (<ProjectCategoryEntity>[] is M) {
       return data.map<ProjectCategoryEntity>((Map<String, dynamic> e) =>
           ProjectCategoryEntity.fromJson(e)).toList() as M;
@@ -156,6 +186,10 @@ class JsonConvert {
     if (<UserInfoEntity>[] is M) {
       return data.map<UserInfoEntity>((Map<String, dynamic> e) =>
           UserInfoEntity.fromJson(e)).toList() as M;
+    }
+    if (<UserToolEntity>[] is M) {
+      return data.map<UserToolEntity>((Map<String, dynamic> e) =>
+          UserToolEntity.fromJson(e)).toList() as M;
     }
 
     debugPrint("${M.toString()} not found");
